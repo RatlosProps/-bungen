@@ -1,0 +1,97 @@
+// 1.0 Zeichne ein quadratisches Canvas.
+// Zeichne auf dem Canvas ein Schachbrettmuster, so dass alle Felder 20px breit und ebenso hoch sind.
+
+
+const boody = document.querySelector("body");
+const canvas = document.createElement("canvas");
+const ctx = canvas.getContext("2d");
+boody.appendChild(canvas);
+canvas.style.border = "1px solid darkgray";
+canvas.width = 160;
+canvas.height = 160;
+let schwarzesFeld = false
+
+for (let i = 0; i < 8; i++) {
+    if (schwarzesFeld === true) {
+        ctx.fillStyle = 'black';
+        schwarzesFeld = false;
+    } else {
+        ctx.fillStyle = 'red';
+        schwarzesFeld = true;
+    }
+    for (let j = 0; j < 8; j++) {
+        if (schwarzesFeld === true) {
+            ctx.fillStyle = 'black';
+            schwarzesFeld = false;
+        } else {
+            ctx.fillStyle = 'red';
+            schwarzesFeld = true;
+        }
+    ctx.fillRect(i * 20,  j * 20, 20 , 20 );
+    }
+}
+
+// 2.0 Zeichne auf dem Canvas eine grüne Sinuskurve.
+// Die Kurve soll auf einem Koordinatenkreuz liegen.
+// 2.1 Schreibe eine Skala auf die Achsen, welche die Gradzahlen in 45er-Schritten darstellt.
+// 2.2 Überlagere die Sinuskurve mit einem Rauschen.
+// Das Rauschen soll animiert sein.
+
+const canvas2 = document.createElement("canvas");
+const ctx2 = canvas2.getContext("2d");
+boody.appendChild(canvas2);
+canvas2.style.border = "1px solid darkgray";
+canvas2.width = 500;
+canvas2.height = 100;
+setInterval(() => {
+    // Canvas vorher leeren
+    ctx2.clearRect(0, 0, canvas2.width, canvas2.height);
+ctx2.strokeStyle = "grey";
+//ctx2.beginPath();
+//ctx2.moveTo(canvas2.width / 2, 0);
+//ctx2.lineTo(canvas2.width / 2, canvas2.height);
+//ctx2.closePath();
+//ctx2.stroke();
+
+ctx2.beginPath();
+ctx2.moveTo(0, canvas2.height / 2);
+ctx2.lineTo(canvas2.width, canvas2.height / 2);
+ctx2.closePath();
+ctx2.stroke();
+
+for (let j = 0; j < canvas2.width; j++) {
+    if (j % 45 === 0) {
+        ctx2.beginPath();
+        ctx2.moveTo(j, canvas2.height / 4 );
+        ctx2.lineTo(j, (canvas2.height / 4) * 3);
+        ctx2.closePath();
+        ctx2.stroke();
+    }
+}
+
+ctx2.strokeStyle = "green";
+ctx2.lineWidth = 3;
+
+    // Pfad neu beginnen
+    ctx2.beginPath();
+    ctx2.moveTo(0, canvas2.height / 2);
+
+
+
+    for (let i = 0; i < canvas2.width; i++) {
+        const random = Math.floor((Math.random() * 10) - 5);
+        const sinus = Math.sin((i / 180) * Math.PI);
+        const drawline = canvas2.height / 2 + sinus * 25;
+        ctx2.lineTo(i, drawline + random);
+    }
+
+    ctx2.strokeStyle = "green";
+    ctx2.lineWidth = 2;
+    ctx2.stroke(); // Linie wird nur einmal gezeichnet
+}, 100);
+//ctx2.closePath();
+
+//console.log(sinus)
+
+
+r
