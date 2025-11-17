@@ -1,0 +1,161 @@
+
+const boody = document.querySelector("body");
+const canvas = document.createElement("canvas");
+const ctx = canvas.getContext("2d");
+boody.appendChild(canvas);
+let c = canvas;
+canvas.style.border = "1px solid red";
+
+//let c = document.querySelector('canvas');  // Einfachere Variante wenn man darauf zugreifen will und es bereits im html steht
+//let ctx = c.getContext('2d');
+
+
+// 0.0  Zeichne einen Kasten im Canvas.
+//      Dieser Kasten soll halb so hoch und halb so breit wie der Canvas sein.
+//      Der Kasten soll horizontal und vertikal zentriert sein.
+//      Der Kasten soll mit einem Blaugrau gefüllt sein.
+ctx.fillStyle = 'greyblue';
+//ctx.fillRect(c.width / 4, c.height / 4, c.width / 2, c.height / 2)
+ctx.fillRect(c.width / 4, c.height / 4, canvas.width / 2 , canvas.height / 2 );
+
+// 0.1  Verteile auf dem Canvas 100 quadratische Kästen mit zufälliger Positionierung.
+canvas.width *= 2;
+canvas.height *= 2;
+
+for (let i = 0; i < 100; i++) {
+ //   const zufall = (min, max) => ~~(Math.random() * (max - min + 1) + min);  // Farbe Optional
+ //   ctx.fillStyle = `hsl(${zufall(0,360)},100%,50%)`;
+    let random = Math.floor((Math.random() * canvas.width ));
+    let random2 = Math.floor((Math.random() * canvas.height ));
+    ctx.fillRect(random, random2, 10, 10);
+}
+
+//0.2 Zeichne jede Sekunde 100 zufällige Quadrate auf einem leeren Canvas.
+setInterval(() => {
+    console.log("Läuft jede Sekunde");
+    for (let i = 0; i < 100; i++) {
+        let random = Math.floor((Math.random() * canvas.width ));
+        let random2 = Math.floor((Math.random() * canvas.height ));
+        ctx.fillRect(random, random2, 10, 10);
+    }
+}, 1000); // 1000 ms = 1 Sekund
+
+// 0.3  Lege einen Canvas an.
+//      Wenn sich die Maus über den Canvas bewegt, soll eine Linie der Maus folgend gezeichnet werden.
+
+const canvas2 = document.createElement("canvas");
+const ctx2 = canvas2.getContext("2d");
+boody.appendChild(canvas2);
+canvas2.style.border = "1px solid red";
+
+canvas2.addEventListener("mousemove", (e) => {
+    ctx2.fillStyle = 'greyblue';
+    const mousemoveX = e.clientX - canvas2.offsetLeft;
+    const mousemoveY = e.clientY - canvas2.offsetTop;
+    ctx2.fillRect(mousemoveX, mousemoveY, 10, 10);
+})
+
+// 0.3 nochmal aber stroke und nicht pixel lösung
+const canvas3 = document.createElement("canvas");
+canvas3.width = 600;
+canvas3.height = 400;
+
+const ctx3 = canvas3.getContext("2d");
+boody.appendChild(canvas3);
+canvas3.style.border = "1px solid red";
+
+// Linienfarbe
+ctx3.strokeStyle = "steelblue";
+ctx3.lineWidth = 2;
+
+let lastPos = null;
+
+canvas3.addEventListener("mousemove", evt => {
+
+    const rect = canvas3.getBoundingClientRect();
+    const x = evt.clientX - rect.left;
+    const y = evt.clientY - rect.top;
+
+    if (lastPos !== null) {
+        ctx3.beginPath();
+        ctx3.moveTo(lastPos.x, lastPos.y);
+        ctx3.lineTo(x, y);
+        ctx3.stroke();
+    }
+
+    lastPos = { x, y };
+});
+
+// 0.4  Wie oben, aber der Kasten soll nur gezeichnet werden, wenn die Maustaste gesrückt ist.
+//      Die Seite soll ein Eingabefeld für die Zeichenfarbe haben.
+//      Außerdem soll ein Eingabefeld die Strichstärke bestimmen.
+
+const br = document.createElement("br");
+boody.appendChild(br);
+
+const canvas4 = document.createElement("canvas");
+canvas4.width = 600;
+canvas4.height = 400;
+
+let colors = ["#FF0000", "#00A8FF", "#00CC44", "#FF8C00", "#FF00FF", "#FFD000", "#7F00FF", "#00E0C6", "#FF0066", "#008F00"];
+
+
+
+const ctx4 = canvas4.getContext("2d");
+
+
+ctx4.strokeStyle = "steelblue";
+
+for (let i = 0; i < colors.length; i++) {
+    const Button = document.createElement("div");
+    boody.appendChild(Button);
+
+    Button.style.minWidth = "50px";
+    Button.style.minHeight = "50px";
+    Button.style.backgroundColor = colors[i];
+    Button.style.display = "inline-block";
+
+    Button.addEventListener("click", () => {
+        ctx4.strokeStyle = colors[i];
+
+    })
+}
+const br2 = document.createElement("br");
+boody.appendChild(br2);
+boody.appendChild(canvas4);
+canvas4.style.border = "1px solid red";
+ctx4.lineWidth = 2;
+let Mausgedrückt = false;
+
+//let lastPos = null;  // ausgeschallten da bei 03 schon definiert
+canvas4.addEventListener("mousedown", () => {
+    Mausgedrückt = true;
+});
+
+canvas4.addEventListener("mouseup", () => {
+    Mausgedrückt = false;
+    lastPos = null
+});
+
+canvas4.addEventListener("mouseleave", () => {
+    Mausgedrückt = false; // falls Maus aus dem Canvas rausgeht
+});
+
+
+canvas4.addEventListener("mousemove", evt => {
+if ( Mausgedrückt == true ) {
+
+    const rect = canvas4.getBoundingClientRect();
+    const x = evt.clientX - rect.left;
+    const y = evt.clientY - rect.top;
+
+    if (lastPos !== null) {
+        ctx4.beginPath();
+        ctx4.moveTo(lastPos.x, lastPos.y);
+        ctx4.lineTo(x, y);
+        ctx4.stroke();
+    }
+
+    lastPos = { x, y };
+}
+});
