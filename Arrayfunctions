@@ -1,0 +1,67 @@
+// 0.0 Erzeuge ein Array, das aus Objekten mit Personaldaten besteht.
+// Diese sollen den Vornamen, Nachnamen und die Abteilung enthalten.
+
+const Vornamen = ["Anna", "Ben", "Clara", "David", "Elias", "Finn", "Greta", "Hannah", "Ian", "Jonas", "Klara", "Leon", "Mia", "Noah", "Olivia", "Paul", "Quinn", "Ronja", "Sara", "Tim", "Ulla", "Viktor", "Wiebke", "Xenia", "Yara", "Zoe", "Adrian", "Bianca", "Cedric", "Denise", "Erik", "Fabian", "Gina", "Helena", "Isabell", "Jakob", "Kian", "Lara", "Matteo", "Nele", "Oskar", "Pia", "Quentin", "Ralf", "Selina", "Theo", "Uwe", "Valentina", "Wanda"];
+const Nachname = ["Müller", "Schmidt", "Schneider", "Fischer", "Weber", "Meyer", "Wagner", "Becker", "Schulz", "Hoffmann", "Schäfer", "Koch", "Richter", "Klein", "Wolf", "Schröder", "Neumann", "Schwarz", "Zimmermann", "Braun", "Hofmann", "Krüger", "Lange", "Werner", "Schmid", "Schulze", "Keller", "Vogel", "Frank", "Kaiser"];
+const Abteilung = ["Buchhaltung", "Personalwesen", "Einkauf", "Vertrieb", "Marketing", "IT", "Controlling", "Produktion", "Logistik", "Kundenservice", "Qualitätsmanagement", "Forschung", "Entwicklung", "Rechtsabteilung", "Support", "Facility Management", "Management", "Social Media", "Datenanalyse", "Projektmanagement"];
+
+let Firmendaten = [];
+
+
+for (let i = 0; i < 100; i++) {
+
+Firmendaten.push ({
+
+
+    Vorname:  Vornamen[ Math.floor(Math.random() * Vornamen.length)],
+    Nachname: Nachname[ Math.floor(Math.random() * Nachname.length)],
+    Abteilung: Abteilung[Math.floor(Math.random() * Abteilung.length)]
+    } );
+
+}
+//console.log(Firmendaten);
+
+//0.1 Alle Personen in der Datensammlung sollen durch JS-Code zusätzlich ein Geburtsjahr erhalten.
+const   jetzt = new Date(),
+        aktuellesJahr = jetzt.getFullYear(),
+        mindestalter = 18,
+        maxalter = 65;
+const Alter = aktuellesJahr - (Math.floor(Math.random() * (maxalter - mindestalter) )) - mindestalter
+
+let neuedatenbank = [];
+Firmendaten.forEach(element => {
+    const Alter = aktuellesJahr - (Math.floor(Math.random() * (maxalter - mindestalter) )) - mindestalter;
+    neuedatenbank.push ({
+        Vorname: element.Vorname,
+        Nachname: element.Nachname,
+        Abteilung: element.Abteilung,
+        Alter: Alter,
+    });
+});
+
+console.log(neuedatenbank);
+
+//0.1 alternative
+ Firmendaten = Firmendaten.map(element => {
+    element.Geburstjahr = aktuellesJahr - (Math.floor(Math.random() * (maxalter - mindestalter) )) - mindestalter
+    return element;
+})
+console.log(Firmendaten);
+//0.2Aus den Daten sollen alle Personen gesucht werden, die in der IT-Abteilung arbeiten.
+let Admins = Firmendaten.filter(person => person.Abteilung === "IT");
+console.log(Admins);
+
+
+
+//0.3 Aus den Daten sollen alle Personen gesucht werden, die in der Personalwesen Abteilung arbeiten und jünger sind als 30
+let U30 = aktuellesJahr - 30;
+let personaler = Firmendaten.filter(person => person.Abteilung === "Personalwesen")
+.filter(alter => alter.Geburstjahr > U30);
+console.log(personaler);
+
+//0.4 Aus den Daten soll ermittelt werden, wie hoch das Durchschnittsalter der Personen ist.
+let durchschnittsalterarr = Firmendaten.map(element => element.Geburstjahr)
+let durchschnittsalter = 0;
+durchschnittsalterarr.forEach(element => {durchschnittsalter += aktuellesJahr - element;});
+durchschnittsalter /= Firmendaten.length;
+console.log(durchschnittsalter);
