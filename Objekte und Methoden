@@ -1,0 +1,174 @@
+// 1.0 Erstelle eine Klasse, die Objekte für Kinofilme anlegt.
+// Jedes Objekt soll die folgenden Informationen enthalten:
+//
+//
+//     Filmtitel
+//
+//     Regisseur
+//
+//     Laufzeit in Minuten
+//
+//     Erscheinungsjahr
+//
+//
+// Verwende diesen Konstruktor, um 4 Filme Deiner Wahl als Objekt anzulegen.
+// 1.1 Erweitere die Klasse durch eine Methode, die das aktuelle Alter des Filmes per return liefert
+// 1.2 Erweitere die Klasse für Kinofilme um ein Attribut, das den Cast enthält.
+
+const   jetzt = new Date(),
+    aktuellesJahr = jetzt.getFullYear();
+
+class film {
+    constructor(Filmtitel, Regisseuer, Laufzeit, Erscheinungsjahr, cast) {
+        this.Filmtitel = Filmtitel;
+        this.Regisseuer = Regisseuer;
+        this.Laufzeit = Laufzeit;
+        this.Erscheinungsjahr = Erscheinungsjahr;
+        this.cast = [];
+
+
+    }
+    get Alter () {
+        return~~(aktuellesJahr - this.Erscheinungsjahr);
+    }
+
+
+}
+class cast {
+    constructor(Charakter, Name, Synchro) {
+        this.Charakter = Charakter;
+        this.Name = Name;
+        this.Synchro = Synchro;
+    }
+}
+
+
+const KinoFilme = new film("Chihiros Reise ins Zauberland", "Hayao Miyazaki", 125, 2001)
+
+const FilmListe = [
+    new film("Chihiros Reise ins Zauberland", "Hayao Miyazaki", 125, 2001),
+    new film("Alien", "Ridley Scott", 117, 1979),
+    new film("Scott Pilgrim", "Edgar Wright", 112, 2010),
+    new film("Your Name", "Makoto Shinkai", 107, 2016),
+
+];
+
+
+FilmListe[0].cast.push(
+    new cast("Chihiro/Sen", 	"Rumi Hiiragi", 	"Sidonie von Krosigk" 	),
+    new cast("Haku", 	"Miyu Irino", 	"Tim Sander" 	),
+    new cast("Yubaba/Zeniba", 	"Mari Natsuki", 	"Nina Hagen" ),
+    new cast("Lin", 	"Yumi Tamai", 	"Cosma Shiva Hagen"),
+);
+FilmListe[1].cast.push(
+    new cast("Ellen Louise Ripley", 	"Sigourney Weaver", 	"Helgard Bruckhaus"),
+    new cast("Cpt. Arthur Dallas Coblenz", 	"Tom Skerritt", 	"Sigmar Solbach"),
+    new cast("Ash", 	"Ian Holm", 	"Mogens von Gadow"),
+    new cast("Samuel Elias Brett", 	"Harry Dean Stanton",	"Friedrich Georg Beckhaus"),
+);
+FilmListe[2].cast.push(
+    new cast("Scott W. Pilgrim", 	"Michael Cera", 	"Nicolás Artajo"),
+    new cast("Ramona Victoria Flowers", 	"Mary Elizabeth Winstead", 	"Maria Koschny"),
+    new cast("Wallace Wells", 	"Kieran Culkin", 	"Constantin von Jascheroff"),
+    new cast("Kim Pine", 	"Alison Pill ",	"Yvonne Greitzke"),
+);
+FilmListe[3].cast.push(
+    new cast("Taki Tachibana", 	"Ryunosuke Kamiki", 	"Maximilian Belle"),
+    new cast("Mitsuha Miyamizu", 	"Mone Kamishiraishi", 	"Laura Jenni"),
+    new cast("Miki Okudera", 	"Masami Nagasawa", 	"Laura Maire"),
+    new cast("Hitoha Miyamizu", 	"Etsuko Ichihara", 	"Eva-Maria Lahl"),
+);
+//FilmListe[1].cast.push()
+
+const body = document.querySelector("section");
+const style = document.createElement("style");
+style.textContent = `
+    .film {
+        background-color: lightgrey;
+        padding: 10px 10px 0;
+        border-radius: 8px;
+        margin: 10px auto 0;
+        width: 800px;
+} 
+    .jahr {
+     text-align: left;
+     }
+     h2 {
+     margin: 10px 0 0
+     }
+`;
+
+document.head.appendChild(style);
+for (let i = 0; i < FilmListe.length; i++) {
+    const container = document.createElement("div");
+    body.appendChild(container);
+    container.classList.add("film");
+
+    const Filmname = document.createElement("h2");
+    container.appendChild(Filmname);
+    Filmname.innerHTML = FilmListe[i].Filmtitel;
+
+    const flex =document.createElement("div");
+    flex.style.display = "flex";
+    flex.style.gap = "20px";
+    container.appendChild(flex);
+
+
+    const Regie = document.createElement("p");
+    flex.appendChild(Regie);
+    Regie.style.fontWeight = "bold";
+    Regie.innerHTML = FilmListe[i].Regisseuer;
+
+    const Jahr = document.createElement("p");
+    flex.appendChild(Jahr);
+    Jahr.classList.add("jahr");
+    Jahr.innerHTML = FilmListe[i].Erscheinungsjahr;
+
+    const Laufzeit = document.createElement("p");
+    container.appendChild(Laufzeit);
+    Laufzeit.innerHTML = "Dauer: " + FilmListe[i].Laufzeit + " Minuten";
+
+    const castflex = document.createElement("div");
+    container.appendChild(castflex);
+    castflex.style.display = "flex";
+    castflex.style.justifyContent = "space-between";
+
+    const castChar = document.createElement("p");
+    castflex.appendChild(castChar);
+    castChar.style.fontWeight = "bold";
+    castChar.innerText = "Charakter";
+
+    const castSchau = document.createElement("p");
+    castflex.appendChild(castSchau);
+    castSchau.style.fontWeight = "bold";
+    castSchau.innerText= "Schauspieler";
+
+    const castSynch = document.createElement("p");
+    castflex.appendChild(castSynch);
+    castSynch.style.fontWeight = "bold";
+    castSynch.innerText = "Synchronsprecher";
+
+    for (let j = 0; j < FilmListe[i].cast.length; j++) {
+        const neueZeile = document.createElement("div");
+        container.appendChild(neueZeile);
+        neueZeile.style.display = "flex";
+        neueZeile.style.justifyContent = "space-between";
+
+        const Char = document.createElement("p");
+        neueZeile.appendChild(Char);
+        Char.innerText = FilmListe[i].cast[j].Charakter;
+
+        const Schau = document.createElement("p");
+        neueZeile.appendChild(Schau);
+        Schau.innerText = FilmListe[i].cast[j].Name;
+
+        const Synch = document.createElement("p");
+        neueZeile.appendChild(Synch);
+        Synch.innerText = FilmListe[i].cast[j].Synchro;
+    }
+
+
+
+}
+console.log(FilmListe);
+
