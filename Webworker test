@@ -1,0 +1,204 @@
+// 0.0  Schreibe ein Programm, das mithilfe von Webworkern beliebige Zahlen darauf überprüft, ob es Primzahlen sind.
+//      Für jede Zahl soll ein DOM-Element angezeigt werden, in dem der aktuelle Status dargestellt wird.
+// 0.1  Erweitere das Programm so, dass der Webworker regelmäßige Status-Updates liefert, falls der Prozess lange dauert.
+// 0.2  Erweitere das Programm so, dass jede Primzahl-Prüfung ein eigenes DOM-Element erzeugt. In diesem soll die zu prüfende Zahl angezeigt werden, der Progress sowie das Ergebnis.
+// 0.3  Erweitere das Programm um einen Button, mit dem der Webworker abgebrochen werden kann.
+
+
+let worker = new Worker("worker.js");
+//worker.postMessage(5); //Test
+
+worker.onmessage = function(event) {
+    console.log("Ergebnis:", event.data);
+    ergebnissEintragen(event.data)
+};
+
+const body = document.querySelector("body");
+const primH2 = document.createElement("h2");
+body.appendChild(primH2);
+primH2.innerHTML = "Primzahl berechnen";
+const maindiv = document.createElement("div");
+body.appendChild(maindiv);
+maindiv.style.display = "flex";
+
+const input = document.createElement("input");
+maindiv.appendChild(input);
+input.type = "text";
+
+
+const button = document.createElement("button");
+maindiv.appendChild(button);
+button.innerText = "berechnen";
+
+
+button.addEventListener("click", function(event) {
+    worker.postMessage(input.value);
+    domerweitern();
+})
+
+const abbruch = document.createElement("button");
+maindiv.appendChild(abbruch);
+abbruch.innerText = "abbruch";
+abbruch.addEventListener("click", function(event) {
+    worker.terminate();
+    console.log("Abbruch");
+
+    worker = new Worker("worker.js");
+    worker.onmessage = function(event) {
+        ergebnissEintragen(event.data);
+    };
+
+
+    const alleP = document.querySelectorAll(".ausgebe");
+    const letztesP = alleP[alleP.length - 1];
+
+    letztesP.innerText = "Berechnung abgebrochen";
+})
+
+function domerweitern() {
+
+    const neuesFenster = document.createElement("div");
+    body.appendChild(neuesFenster);
+    neuesFenster.style.backgroundColor = "grey";
+    neuesFenster.style.borderRadius = "5px";
+    neuesFenster.style.boxShadow = "0px 1px 2px 1px grey";
+    neuesFenster.style.width = "20vw";
+
+    const Eingebe = document.createElement("h2");
+    neuesFenster.appendChild(Eingebe);
+    Eingebe.innerText = "Zu berechnende Zahl: " + input.value ;
+
+    const ausgebe = document.createElement("p");
+    neuesFenster.appendChild(ausgebe);
+    ausgebe.classList.add("ausgebe");
+
+
+}
+
+function ergebnissEintragen(übergabe) {
+    const alleP = document.querySelectorAll(".ausgebe");
+    const letztesP = alleP[alleP.length - 1];
+
+    letztesP.innerText = übergabe;
+}
+
+////////////////////////////////////////////////////////////////////////////
+// 1.0 Schreibe einen Webworker, der Fläche und Umfang berechnet und zurückgibt. Per Parameter soll bestimmt werden, welche geometrische Form gemeint ist: Kreis, Quadrat, Rechteck oder Dreieck.
+
+let worker2 = new Worker("webworker2.js");
+
+
+worker2.onmessage = function(event) {
+    console.log("Ergebnis:", event.data);
+};
+
+const umgangH2 = document.createElement("h2");
+body.appendChild(umgangH2);
+umgangH2.innerText = "Umfang Berechnen";
+
+const UmfangDiv = document.createElement("div");
+body.appendChild(UmfangDiv);
+UmfangDiv.style.display = "flex";
+
+const UmfangInput = document.createElement("input");
+UmfangDiv.appendChild(UmfangInput);
+
+const UmfangDrei = document.createElement("Button");
+UmfangDiv.appendChild(UmfangDrei);
+UmfangDrei.innerHTML = "Dreieck";
+UmfangDrei.addEventListener("click", function(event) {
+    const übergabe = {wert: UmfangInput.value, form: "Dreieck"};
+    worker2.postMessage(übergabe);
+});
+
+const UmfangVierne = document.createElement("Button");
+UmfangDiv.appendChild(UmfangVierne);
+UmfangVierne.innerHTML = "Viereck";
+UmfangVierne.addEventListener("click", function(event) {
+    const übergabe = {wert: UmfangInput.value, form: "Viereck"};
+    worker2.postMessage(übergabe);
+});
+
+const UmfangKreis = document.createElement("Button");
+UmfangDiv.appendChild(UmfangKreis);
+UmfangKreis.innerHTML = "Kreis";
+UmfangKreis.addEventListener("click", function(event) {
+    const übergabe = {wert: UmfangInput.value, form: "Kreis"};
+    worker2.postMessage(übergabe);
+});
+
+///////////////////////////////////////////////////
+///////////////////////////////////////////////////
+////////////////////worker.js//////////////////////
+///////////////////////////////////////////////////
+///////////////////////////////////////////////////
+
+self.onmessage = function (event) {
+    const wert = event.data;
+    const ergebnis = wert * 2;
+    self.postMessage(ergebnis);
+};
+
+self.onmessage = function (event) {
+    const wert = event.data;
+    const wurzel = Math.sqrt(wert);
+
+    const interval = setInterval(() => {
+
+    }, 1000);
+    for (let i = 2; i < wert; i++) {
+        if (wert % i === 0 && wert !== i) {
+            self.postMessage("Ein Teiler ist: " + i);
+            aktiv = false;
+
+            return;
+        }
+        if ( i % 100000000 === 0 ) {
+            const prozent = i / wert * 100;
+            const ausgabe = Number(prozent.toFixed(2));
+            self.postMessage("Ich bin noch am Rechnen. " + ausgabe + " % geschafft");
+        }
+    }
+
+    self.postMessage(wert + " ist eine Primzahl");
+}
+
+
+// hohe Primzahlen zum testen
+// 29996224275833
+// 1000000007
+
+
+///////////////////////////////////////////////////
+///////////////////////////////////////////////////
+////////////////////webworker2.js//////////////////
+///////////////////////////////////////////////////
+///////////////////////////////////////////////////
+
+self.onmessage = function (event) {
+    const { wert, form } = event.data;
+    let Fläche = 0;
+    let Umfang = 0;
+    if (form === "Dreieck") {
+        Fläche = wert * wert / 2;
+        Umfang = wert * 3;
+
+        self.postMessage("Dreieck");
+    } else if (form === "Viereck") {
+        Fläche = wert * wert;
+        Umfang = wert * 4;
+
+        self.postMessage("Viereck");
+    } else if (form === "Kreis") {
+        Fläche = wert * wert * Math.PI;
+        Umfang = Math.PI * 2 * wert;
+
+        self.postMessage("Kreis");
+    } else {
+        self.postMessage("Fehler");
+    }
+
+const ergebnis = {Fläche: Fläche, Umfang: Umfang, form: form};
+
+    self.postMessage(ergebnis);
+};
