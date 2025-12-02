@@ -1,0 +1,88 @@
+import { useState } from 'react'
+import reactLogo from './assets/react.svg'
+import viteLogo from '/vite.svg'
+import './App.css'
+//0.0
+// Erzeuge eine Komponente, die in einem H2-Container einen Text Deiner Wahl ausgibt.
+//0.1
+// Erzeuge eine weitere Komponente, die unter der Überschrift einen DIV-Container mit einem Inhalt Deiner Wahl ausgibt.
+//0.2
+// Statt eines einfachen Textes sollen in dem Div-Container vier p-Tags mit jeweils einem Text Deiner Wahl stehen.
+//0.3
+// Nach den p-Tags soll eine nummerierte Liste mit Inhalt Deiner Wahl stehen. Jedes li-Element soll aus einer Komponente erzeugt werden.
+
+/*
+function App() {
+
+    function random() {    return (Math.floor(Math.random() * 1000))}
+
+    return (
+    <>
+      <h2>Meine Überschrift</h2>
+        <p>Inhalt meiner Wahl</p>
+        <div className="flex">
+            <p>Text 1</p>
+            <p>Text 2</p>
+            <p>Text 3</p>
+            <p>Text 4</p>
+
+        </div>
+        <ol>
+            <li>{random()}</li>
+            <li>{random()}</li>
+            <li>{random()}</li>
+            <li>{random()}</li>
+
+        </ol>
+    </>
+  )
+}
+*/
+
+
+// 1.0 In einer Komponente, die einen Div-Container erzeugt, soll ein Text Deiner Wahl stehen. Innerhalb dieses Textes soll ein span-Element sein.
+// Dieses span-Element soll bei Klick ein Alert-Fenster öffnen, das den Inhalt des span-Elementes anzeigt.
+// 1.1 Wie oben, aber die Komponente soll einen Counter enthalten. Dieser wird bei Klick hochgezählt und der Zählerstand soll im Button angezeigt werden.
+// 1.2
+// Wie oben, aber bei jedem Klick soll ein neues DOM-Element eingehängt werden.
+// 1.3
+// Erzeuge eine Komponente, in der in jeder Sekunde ein neues p-tag angelegt wird.
+// In diesen p-Tags steht eine laufende Nummer.
+
+function App() {
+    const [geklickt, setGeklickt] = useState(0);
+    const [items, setItems] = useState([]);
+
+
+
+    function klickMich() {
+        setGeklickt(geklickt + 1);
+         alert("Ich sagte doch nicht klicken")
+        addItem()
+
+    }
+    function addItem() {
+        setItems([...items, `Du hast geklickt`]);
+    }
+
+/*setInterval(() => {
+    setItems([...items, "Hey ein neues Element wurde erzeugt"]);
+    }, 1000);
+*/
+    return (
+        <>
+        <p>Du solltest auf keinen Fall <span onClick={klickMich}> Hier </span> Klicken</p>
+        <p className={"box"}>{geklickt}</p>
+            <ul>
+                {items.map((item, index) => (
+                    <li key={index}>{item}</li>
+                ))}
+            </ul>
+        </>
+
+    )
+
+}
+
+
+export default App
